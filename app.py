@@ -1,7 +1,7 @@
 from dashboard.layout import create_layout
-from data.manager import load_projects
-from dashboard.color_scheme import COLOR_SCHEME
-import dash
+from dashboard.table import create_data_table
+from dashboard.charts import create_bar_chart
+from dashboard.image import load_projects
 
 app = dash.Dash(__name__, external_stylesheets=[
     'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
@@ -16,4 +16,7 @@ if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 8050))
     app.run_server(debug=True, host="0.0.0.0", port=port)
+
+
+
 
