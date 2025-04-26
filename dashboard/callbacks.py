@@ -1,56 +1,45 @@
-from dash import Output, Input, State, callback, dash_table
-import pandas as pd
-import plotly.graph_objects as go
+# dashboard/callbacks.py
 
-@callback(
-    Output('data-table', 'data'),
-    Input('add-row-btn', 'n_clicks'),
-    State('data-table', 'data'),
-    prevent_initial_call=True
-)
-def add_row(n_clicks, data):
-    data.append({"项目名称": "", "采集时间": "", "采集数量": 0, "状态": "", "操作": ""})
-    return data
+from dash import Input, Output, State, callback, ctx
+from .charts import create_chart_figure
+from .table import generate_table_data
+from .image import get_image_src
 
-@callback(
-    Output('data-table', 'data'),
-    Input('data-table', 'active_cell'),
-    State('data-table', 'data'),
-    prevent_initial_call=True
-)
-def delete_row(active_cell, data):
-    if active_cell and active_cell['column_id'] == '操作':
-        data.pop(active_cell['row'])
-    return data
-
-@callback(
-    Output('bar-chart', 'figure'),
-    Input('data-table', 'data')
-)
-def update_bar_chart(data):
-    df = pd.DataFrame(data)
-    if df.empty:
-        return go.Figure()
-
-    fig = go.Figure()
-
-    for status in df['状态'].unique():
-        filtered = df[df['状态'] == status]
-        fig.add_trace(go.Bar(
-            x=filtered['项目名称'],
-            y=filtered['采集数量'],
-            name=status,
-            marker=dict(line=dict(width=1)),
-            hoverinfo='x+y'
-        ))
-
-    fig.update_layout(
-        plot_bgcolor="#0F0F0F",
-        paper_bgcolor="#0F0F0F",
-        font=dict(color="#00FFFF", family="Orbitron, Roboto"),
-        xaxis=dict(gridcolor="#333"),
-        yaxis=dict(gridcolor="#333"),
-        legend=dict(bgcolor="rgba(0,0,0,0)", font=dict(color="#FFFFFF")),
-        margin=dict(t=40, l=40, r=40, b=40)
+def register_callbacks(app):
+    @app.callback(
+        Output('main-chart', 'figure'),
+        Input('chart-dropdown', 'value')
     )
-    return fig
+    def update_chart(selected_value):
+        if not selected_value:
+            return create_chart_figure(default=True)
+        return create_chart_figure(selected_value)
+
+    @app.callback(
+        Output('data-table', 'data'),
+        Input('refresh-table-button', 'n_clicks'),
+        prevent_initial_call=True
+    )
+    def refresh_table(n_clicks):
+        return generate_table_data()
+
+    @app.callback(
+        Output('project-image', 'src'),
+        Input('image-dropdown', 'value')
+    )
+    def update_image(selected_image):
+        if not selected_image:
+            return get_image_src(default=True)
+        return get_image_src(selected_image)
+
+    @app.callback(
+        Output('notification', 'children'),
+        Input('main-chart', 'clickData'),
+        prevent_initial_call=True
+    )
+    def show_click_notification(click_data):
+        if click_data:
+            point_info = click_data['points'][0]
+            return f"您点击了：{point_info['label']} - {point_info['value']}"
+        return ""
+
