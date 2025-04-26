@@ -13,7 +13,7 @@ df = pd.DataFrame(initial_data)
 layout = html.Div([
     dcc.Store(id='stored-data', data=initial_data),
 
-    html.H1("智元A2 项目看板", className="title"),
+    html.H1("智元A2项目", className="title"),
 
     html.Div([
         html.Button("➕ 添加新行", id="add-row-btn", n_clicks=0, className="add-btn"),
