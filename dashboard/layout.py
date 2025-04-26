@@ -1,4 +1,4 @@
-from dash import html
+from dash import html, dcc    # ✅ 加上 dcc
 from dashboard.charts import generate_bar_chart
 from dashboard.table import generate_table
 
