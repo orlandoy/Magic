@@ -3,7 +3,7 @@ from dashboard.layout import layout
 from dashboard.callbacks import register_callbacks
 
 app = Dash(__name__, external_stylesheets=["/assets/style.css"])
-app.title = "智元A2 项目看板"
+app.title = "智元A2项目看板"
 app.layout = layout
 
 register_callbacks(app)
