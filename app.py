@@ -26,5 +26,9 @@ def update_output(table_data, n_clicks, stored_data):
         stored_data = table_data
 
     return generate_bar_chart(stored_data), generate_table(stored_data), stored_data
+
+import os
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 8050))
+    app.run(debug=True, host="0.0.0.0", port=port)
+
