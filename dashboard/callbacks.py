@@ -1,5 +1,4 @@
-from dash import Output, Input, State, callback
-import dash_table
+from dash import Output, Input, State, callback, dash_table
 import pandas as pd
 import plotly.graph_objects as go
 
