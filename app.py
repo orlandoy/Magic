@@ -1,12 +1,14 @@
 import os
 import dash
 from dashboard.layout import layout
+from dashboard.callbacks import *
+
 
 app = dash.Dash(__name__, external_stylesheets=[
     "https://fonts.googleapis.com/css2?family=Orbitron&display=swap",
     "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
 ])
-app.title = "智元A2项目数据采集看板"
+app.title = "智元A2项目数据采集"
 
 app.layout = layout
 
